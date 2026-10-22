@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ja" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RSVP Reader</title>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    #word { font-feature-settings: "palt"; word-break: keep-all; overflow-wrap: anywhere; }
+  </style>
+</head>
+<body class="min-h-screen bg-base-200">
+  <div class="navbar bg-base-100 shadow-sm px-4">
+    <div class="flex-1">
+      <span class="text-xl font-bold">RSVP Reader</span>
+    </div>
+    <label class="swap swap-rotate btn btn-ghost btn-circle" title="テーマ切替">
+      <input type="checkbox" id="themeToggle" />
+      <span class="swap-off text-xl">☀️</span>
+      <span class="swap-on text-xl">🌙</span>
+    </label>
+  </div>
+
+  <main class="max-w-4xl mx-auto p-4 space-y-4">
+    <!-- Editor -->
+    <section id="editor" class="card bg-base-100 shadow">
+      <div class="card-body gap-4">
+        <h2 class="card-title">テキスト</h2>
+        <textarea id="input" class="textarea w-full h-72 font-mono text-sm"
+          placeholder="読みたい文章を貼り付けるか、.txt / .md ファイルを読み込んでください。"></textarea>
+        <div class="flex flex-wrap items-center gap-4">
+          <input type="file" id="file" accept=".txt,.md,.markdown,text/plain,text/markdown"
+            class="file-input file-input-sm" />
+          <label class="label cursor-pointer gap-2">
+            <input type="checkbox" id="skipCode" class="toggle toggle-sm" checked />
+            <span>コードブロックを省略</span>
+          </label>
+          <span id="stats" class="text-sm opacity-70"></span>
+        </div>
+        <div class="card-actions justify-end">
+          <button id="start" class="btn btn-primary">読み始める (⌘/Ctrl+Enter)</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reader -->
+    <section id="reader" class="hidden space-y-4">
+      <div class="card bg-base-100 shadow">
+        <div class="card-body items-center py-10">
+          <div class="h-6"><span id="badge" class="badge badge-secondary badge-sm hidden">見出し</span></div>
+          <div class="w-full grid grid-cols-[1fr_minmax(0,auto)_1fr] items-center gap-6 h-32">
+            <div id="prev" class="text-right text-xl opacity-25 truncate"></div>
+            <div class="relative px-4">
+              <div class="absolute left-1/2 -top-4 h-3 border-l-2 border-primary"></div>
+              <div id="word" class="text-6xl font-bold text-center"></div>
+              <div class="absolute left-1/2 -bottom-4 h-3 border-l-2 border-primary"></div>
+            </div>
+            <div id="next" class="text-left text-xl opacity-25 truncate"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card bg-base-100 shadow">
+        <div class="card-body gap-4">
+          <input id="progress" type="range" min="0" max="0" value="0" class="range range-primary range-xs w-full" />
+          <div class="flex justify-between text-sm opacity-70">
+            <span id="position"></span>
+            <span id="remaining"></span>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-center gap-2">
+            <button id="back" class="btn btn-ghost" title="前の文 (←)">⏮ 前の文</button>
+            <button id="toggle" class="btn btn-primary w-32" title="再生/一時停止 (Space)">▶ 再生</button>
+            <button id="forward" class="btn btn-ghost" title="次の文 (→)">次の文 ⏭</button>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <span class="text-sm whitespace-nowrap">速度</span>
+            <input id="speed" type="range" min="100" max="1000" step="20" value="400" class="range range-sm flex-1" />
+            <span id="speedLabel" class="text-sm w-28 text-right tabular-nums"></span>
+          </div>
+
+          <div class="flex flex-wrap items-end justify-between gap-2">
+            <dl class="grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-1 text-xs opacity-60">
+              <dt class="flex gap-1"><kbd class="kbd kbd-xs">Space</kbd></dt><dd>再生 / 一時停止</dd>
+              <dt class="flex gap-1"><kbd class="kbd kbd-xs">←</kbd><kbd class="kbd kbd-xs">→</kbd></dt><dd>前 / 次の文</dd>
+              <dt class="flex gap-1"><kbd class="kbd kbd-xs">↑</kbd><kbd class="kbd kbd-xs">↓</kbd></dt><dd>速度を上げる / 下げる</dd>
+              <dt class="flex gap-1"><kbd class="kbd kbd-xs">Esc</kbd></dt><dd>編集に戻る</dd>
+            </dl>
+            <button id="edit" class="btn btn-sm btn-outline">編集に戻る</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="vendor/budoux-ja.js"></script>
+  <script src="segment.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
